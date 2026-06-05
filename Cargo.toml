@@ -7,6 +7,8 @@ members = [
     "crates/borderless-signaling",
     "crates/borderless-relay",
 ]
+# apps/desktop/src-tauri is a Tauri v2 app requiring GTK/webkit2gtk system libs.
+# Build it independently with: cd apps/desktop && npm run tauri build
 
 [workspace.package]
 version      = "0.1.0"
