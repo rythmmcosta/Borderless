@@ -1,0 +1,26 @@
+syntax = "proto3";
+package borderless;
+
+message Envelope {
+  string sender_id      = 1;
+  string target_id      = 2;
+  MsgType msg_type      = 3;
+  bytes  payload        = 4;
+  uint32 seq            = 5;
+  int64  timestamp_ns   = 6;
+}
+
+enum MsgType {
+  HANDSHAKE           = 0;
+  INPUT               = 1;
+  CLIPBOARD           = 2;
+  FILE_TRANSFER_INIT  = 3;
+  FILE_TRANSFER_CHUNK = 4;
+  FILE_TRANSFER_ACK   = 5;
+  NOTIFICATION        = 6;
+  SCREEN_FRAME        = 7;
+  PING                = 8;
+  PONG                = 9;
+  CURSOR_WARP         = 10;
+  CURSOR_RETURN       = 11;
+}

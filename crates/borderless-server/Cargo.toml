@@ -1,0 +1,31 @@
+[package]
+name        = "borderless-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "borderless-server"
+path = "src/main.rs"
+
+[dependencies]
+tokio        = { workspace = true }
+serde        = { workspace = true }
+serde_json   = { workspace = true }
+uuid         = { workspace = true }
+chrono       = { workspace = true }
+anyhow       = { workspace = true }
+thiserror    = { workspace = true }
+tracing      = { workspace = true }
+tracing-subscriber = { workspace = true }
+async-trait  = { workspace = true }
+axum         = { version = "0.7", features = ["ws", "multipart", "macros"] }
+axum-extra   = { version = "0.9", features = ["typed-header"] }
+tower        = { version = "0.4" }
+tower-http   = { version = "0.5", features = ["cors", "trace", "compression-gzip", "timeout"] }
+sqlx         = { version = "0.7", features = ["postgres","runtime-tokio-rustls","uuid","chrono","json","migrate"] }
+redis        = { version = "0.24", features = ["tokio-comp","connection-manager","aio"] }
+jsonwebtoken = "9.2"
+argon2       = "0.5"
+reqwest      = { version = "0.11", features = ["json","rustls-tls"], default-features = false }
+dotenvy      = "0.15"
