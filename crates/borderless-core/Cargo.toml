@@ -32,7 +32,6 @@ x25519-dalek = { workspace = true }
 ed25519-dalek = { workspace = true }
 socket2      = { workspace = true }
 hex          = "0.4"
-tempfile     = { version = "3", optional = true }
 
 # mDNS discovery
 mdns-sd      = "0.7"
@@ -64,3 +63,4 @@ core-foundation = "0.9"
 
 [dev-dependencies]
 tokio-test   = "0.4"
+tempfile     = "3"

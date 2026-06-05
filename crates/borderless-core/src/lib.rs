@@ -18,30 +18,30 @@ pub use error::CoreError;
 pub use identity::DeviceIdentity;
 pub use session::{Session, SessionConfig, SessionState, SessionType};
 
+use std::net::SocketAddr;
 use std::sync::Arc;
-use tokio::sync::RwLock;
 
 /// Top-level engine — one instance per running device.
-/// Owns the state machine, discovery, and all active sessions.
+/// Owns the identity, discovery service, and all active sessions.
 pub struct BorderlessEngine {
-    pub identity: DeviceIdentity,
-    pub config:   EngineConfig,
+    pub identity:  DeviceIdentity,
+    pub config:    EngineConfig,
     pub discovery: discovery::DiscoveryService,
-    session_mgr:  session::SessionManager,
+    session_mgr:   session::SessionManager,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct EngineConfig {
     /// Remote API base URL
-    pub api_url:          String,
+    pub api_url:           String,
     /// Human-readable name shown to peers
-    pub device_name:      String,
-    /// Sync features
-    pub clipboard_sync:   bool,
-    pub file_transfer:    bool,
+    pub device_name:       String,
+    /// Sync feature flags
+    pub clipboard_sync:    bool,
+    pub file_transfer:     bool,
     pub notification_sync: bool,
-    /// Port to listen on for peer connections
-    pub listen_port:      u16,
+    /// Port to listen on for incoming peer connections
+    pub listen_port:       u16,
 }
 
 impl Default for EngineConfig {
@@ -67,7 +67,7 @@ impl BorderlessEngine {
         Ok(Self { identity, config, discovery, session_mgr })
     }
 
-    /// Start LAN discovery + peer listener.
+    /// Start LAN discovery advertising + peer TCP listener.
     pub async fn start(&mut self) -> Result<(), CoreError> {
         self.discovery.start().await?;
         self.session_mgr.start_listener().await?;
@@ -79,9 +79,21 @@ impl BorderlessEngine {
         Ok(())
     }
 
-    /// Connect to a peer and return the live session handle.
+    /// Connect to a LAN peer by ID.
+    ///
+    /// Looks up the peer's address from the mDNS discovery cache,
+    /// then performs a TCP + ECDH handshake to establish an encrypted session.
     pub async fn connect(&mut self, peer_id: uuid::Uuid) -> Result<Arc<Session>, CoreError> {
-        self.session_mgr.connect(peer_id).await
+        let peer = self.discovery
+            .peer_by_id(peer_id)
+            .ok_or(CoreError::PeerNotFound(peer_id))?;
+        let addr = SocketAddr::new(peer.ip, peer.port);
+        self.session_mgr.connect(peer_id, addr).await
+    }
+
+    /// Connect to a peer at an explicit address (bypasses discovery cache).
+    pub async fn connect_to(&mut self, peer_id: uuid::Uuid, addr: SocketAddr) -> Result<Arc<Session>, CoreError> {
+        self.session_mgr.connect(peer_id, addr).await
     }
 
     pub fn discovered_devices(&self) -> Vec<discovery::DiscoveredPeer> {
