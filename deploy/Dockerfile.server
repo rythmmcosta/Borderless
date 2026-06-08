@@ -1,0 +1,39 @@
+# ---- Build stage ----
+FROM rust:1.75-slim AS builder
+WORKDIR /app
+
+# Install system deps for OpenSSL + pkg-config
+RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+
+# Copy workspace manifests first to cache dependency layer
+COPY Cargo.toml Cargo.lock ./
+COPY crates/borderless-core/Cargo.toml      crates/borderless-core/Cargo.toml
+COPY crates/borderless-protocol/Cargo.toml  crates/borderless-protocol/Cargo.toml
+COPY crates/borderless-server/Cargo.toml    crates/borderless-server/Cargo.toml
+COPY crates/borderless-signaling/Cargo.toml crates/borderless-signaling/Cargo.toml
+COPY crates/borderless-relay/Cargo.toml     crates/borderless-relay/Cargo.toml
+
+# Stub sources so Cargo can fetch + cache deps
+RUN mkdir -p crates/borderless-core/src crates/borderless-protocol/src \
+             crates/borderless-server/src crates/borderless-signaling/src \
+             crates/borderless-relay/src && \
+    echo '' > crates/borderless-core/src/lib.rs && \
+    echo '' > crates/borderless-protocol/src/lib.rs && \
+    printf 'fn main(){}' > crates/borderless-server/src/main.rs && \
+    printf 'fn main(){}' > crates/borderless-signaling/src/main.rs && \
+    printf 'fn main(){}' > crates/borderless-relay/src/main.rs
+
+RUN cargo build --release --package borderless-server 2>/dev/null; true
+
+# Copy real sources and rebuild
+COPY crates/ crates/
+RUN touch crates/borderless-server/src/main.rs && \
+    cargo build --release --package borderless-server
+
+# ---- Runtime stage ----
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y ca-certificates libssl3 && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/target/release/borderless-server /usr/local/bin/borderless-server
+COPY migrations/ /migrations/
+EXPOSE 8080
+ENTRYPOINT ["borderless-server"]
