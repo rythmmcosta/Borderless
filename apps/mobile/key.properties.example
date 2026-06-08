@@ -1,0 +1,6 @@
+# Copy this to android/key.properties (not tracked by git) and fill in your signing values.
+# In CI, these come from GitHub Actions secrets.
+storePassword=your_keystore_password
+keyPassword=your_key_password
+keyAlias=borderless
+storeFile=borderless.jks

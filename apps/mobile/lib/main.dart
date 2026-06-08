@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/api_client.dart';
 import 'core/theme.dart';
 import 'features/devices/devices_screen.dart';
@@ -7,8 +9,14 @@ import 'features/settings/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ApiClient().init();
-  runApp(const BorderlessApp());
+  final prefs = await SharedPreferences.getInstance();
+  final apiClient = ApiClient(prefs: prefs);
+  runApp(
+    ChangeNotifierProvider.value(
+      value: apiClient,
+      child: const BorderlessApp(),
+    ),
+  );
 }
 
 class BorderlessApp extends StatelessWidget {
@@ -18,8 +26,8 @@ class BorderlessApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Borderless',
-      theme: AppTheme.dark(),
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark(),
       home: const MainShell(),
     );
   }
@@ -33,13 +41,7 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
-  int _tab = 0;
-
-  static const _destinations = [
-    NavigationDestination(icon: Icon(Icons.devices), label: 'Devices'),
-    NavigationDestination(icon: Icon(Icons.content_paste), label: 'Clipboard'),
-    NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-  ];
+  int _index = 0;
 
   static const _screens = [
     DevicesScreen(),
@@ -50,11 +52,15 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_tab],
+      body: _screens[_index],
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _tab,
-        onDestinationSelected: (i) => setState(() => _tab = i),
-        destinations: _destinations,
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.devices), label: 'Devices'),
+          NavigationDestination(icon: Icon(Icons.content_paste), label: 'Clipboard'),
+          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
       ),
     );
   }
