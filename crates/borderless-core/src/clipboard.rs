@@ -102,14 +102,41 @@ fn platform_write(content: &ClipboardContent) -> Result<(), CoreError> {
         _ => Err(CoreError::Clipboard("Non-text not yet supported on Windows".into())),
     }
 }
+
 #[cfg(target_os = "linux")]
-fn platform_read() -> Result<ClipboardContent, CoreError> { Err(CoreError::Clipboard("Linux clipboard not yet implemented".into())) }
+fn platform_read() -> Result<ClipboardContent, CoreError> {
+    let mut cb = arboard::Clipboard::new().map_err(|e| CoreError::Clipboard(e.to_string()))?;
+    let text = cb.get_text().map_err(|e| CoreError::Clipboard(e.to_string()))?;
+    Ok(ClipboardContent::Text(text))
+}
 #[cfg(target_os = "linux")]
-fn platform_write(_: &ClipboardContent) -> Result<(), CoreError> { Err(CoreError::Clipboard("Linux clipboard not yet implemented".into())) }
+fn platform_write(content: &ClipboardContent) -> Result<(), CoreError> {
+    match content {
+        ClipboardContent::Text(t) => {
+            let mut cb = arboard::Clipboard::new().map_err(|e| CoreError::Clipboard(e.to_string()))?;
+            cb.set_text(t.clone()).map_err(|e| CoreError::Clipboard(e.to_string()))
+        }
+        _ => Err(CoreError::Clipboard("Only text clipboard supported on Linux".into())),
+    }
+}
+
 #[cfg(target_os = "macos")]
-fn platform_read() -> Result<ClipboardContent, CoreError> { Err(CoreError::Clipboard("macOS clipboard not yet implemented".into())) }
+fn platform_read() -> Result<ClipboardContent, CoreError> {
+    let mut cb = arboard::Clipboard::new().map_err(|e| CoreError::Clipboard(e.to_string()))?;
+    let text = cb.get_text().map_err(|e| CoreError::Clipboard(e.to_string()))?;
+    Ok(ClipboardContent::Text(text))
+}
 #[cfg(target_os = "macos")]
-fn platform_write(_: &ClipboardContent) -> Result<(), CoreError> { Err(CoreError::Clipboard("macOS clipboard not yet implemented".into())) }
+fn platform_write(content: &ClipboardContent) -> Result<(), CoreError> {
+    match content {
+        ClipboardContent::Text(t) => {
+            let mut cb = arboard::Clipboard::new().map_err(|e| CoreError::Clipboard(e.to_string()))?;
+            cb.set_text(t.clone()).map_err(|e| CoreError::Clipboard(e.to_string()))
+        }
+        _ => Err(CoreError::Clipboard("Only text clipboard supported on macOS".into())),
+    }
+}
+
 #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
 fn platform_read() -> Result<ClipboardContent, CoreError> { Err(CoreError::Clipboard("Clipboard not available".into())) }
 #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]

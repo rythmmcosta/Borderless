@@ -57,10 +57,12 @@ evdev        = "0.12"
 x11rb        = { version = "0.13", features = ["all-extensions"] }
 x11-clipboard = "0.9"
 libc         = "0.2"
+arboard      = "3"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 core-graphics = "0.23"
 core-foundation = "0.9"
+arboard      = "3"
 
 [dev-dependencies]
 tokio-test   = "0.4"

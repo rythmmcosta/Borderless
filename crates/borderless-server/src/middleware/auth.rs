@@ -1,4 +1,4 @@
-use axum::{body::Body, extract::State, http::Request, middleware::Next, response::Response};
+use axum::{body::Body, extract::State, http::{HeaderMap, Request}, middleware::Next, response::Response};
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -36,4 +36,13 @@ fn verify_jwt(token: &str, secret: &str) -> Result<Claims, jsonwebtoken::errors:
 pub fn issue_jwt(uid: Uuid, email: &str, role: &str, secret: &str, exp_secs: u64) -> Result<String, jsonwebtoken::errors::Error> {
     let now = chrono::Utc::now().timestamp() as usize;
     encode(&Header::default(), &Claims { sub: uid, email: email.into(), role: role.into(), iat: now, exp: now + exp_secs as usize }, &EncodingKey::from_secret(secret.as_bytes()))
+}
+
+/// Extract and verify JWT claims from an Authorization: Bearer header.
+pub fn bearer_claims(headers: &HeaderMap, secret: &str) -> Result<Claims, ApiError> {
+    let token = headers.get("Authorization")
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.strip_prefix("Bearer "))
+        .ok_or_else(|| ApiError::unauth("Missing Authorization: Bearer token"))?;
+    verify_jwt(token, secret).map_err(|_| ApiError::unauth("Invalid or expired token"))
 }
