@@ -1,13 +1,12 @@
-import type { HTMLAttributes } from 'react'
 import { clsx } from 'clsx'
 
-type CardProps = HTMLAttributes<HTMLDivElement>
-
-export function Card({ className, ...props }: CardProps) {
+export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
     <div
-      className={clsx('bg-surface-raised rounded-xl border border-white/5', className)}
-      {...props}
-    />
+      className={clsx('rounded-lg p-4 border border-white/5', className)}
+      style={{backgroundColor:'#1a1a1a'}}
+    >
+      {children}
+    </div>
   )
 }

@@ -2,17 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #141420;
-  --surface: #1e1e2e;
-}
-
-body {
-  background: var(--background);
-  color: #e2e8f0;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
+html, body {
+  background-color: #0f0f0f;
+  color: #ffffff;
 }

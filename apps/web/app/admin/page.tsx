@@ -1,4 +1,2 @@
 import { redirect } from 'next/navigation'
-export default function AdminPage() {
-  redirect('/admin/devices')
-}
+export default function AdminPage() { redirect('/admin/devices') }

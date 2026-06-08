@@ -1,62 +1,43 @@
+export interface User {
+  id: string
+  email: string
+  display_name: string | null
+  role: string
+  mfa_enabled: boolean
+  created_at: string
+  last_seen_at: string | null
+}
+
 export interface Device {
   id: string
   user_id: string
   name: string
   platform: string
-  os_version?: string
-  app_version?: string
+  os_version: string | null
+  app_version: string | null
   fingerprint: string
   is_online: boolean
   is_locked: boolean
-  last_seen_at?: string
-  user_email?: string
-  user_name?: string
-}
-
-export interface User {
-  id: string
-  email: string
-  display_name?: string
-  role: string
-  mfa_enabled: boolean
-  created_at: string
-  last_seen_at?: string
-  device_count?: number
+  last_seen_at: string | null
 }
 
 export interface Session {
   id: string
+  initiator_device_id: string
+  target_device_id: string
   session_type: string
   transport: string
+  status: string
   started_at: string
-  ended_at?: string
-  bytes_sent: number
-  bytes_recv: number
-  source_name: string
-  target_name: string
+  ended_at: string | null
 }
 
-export interface AuditEntry {
+export interface AuditLog {
   id: string
+  actor_id: string | null
   action: string
-  resource_type?: string
-  resource_id?: string
-  ip_address?: string
-  metadata: Record<string, unknown>
+  resource_type: string
+  resource_id: string | null
+  ip_address: string | null
   created_at: string
-  actor_email?: string
-}
-
-export interface AdminStats {
-  total_users: number
-  total_devices: number
-  online_devices: number
-  sessions_today: number
-}
-
-export interface PaginatedResponse<T> {
-  items: T[]
-  total: number
-  offset: number
-  limit: number
 }

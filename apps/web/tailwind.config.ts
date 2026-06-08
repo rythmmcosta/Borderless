@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,15 +10,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        surface: {
-          DEFAULT: '#141420',
-          raised: '#1e1e2e',
-          overlay: '#252535',
-        },
-        brand: {
-          DEFAULT: '#6366f1',
-          hover: '#4f46e5',
-        },
+        surface:   '#0f0f0f',
+        'surface-1': '#1a1a1a',
+        'surface-2': '#242424',
+        primary:   '#6750A4',
       },
     },
   },
