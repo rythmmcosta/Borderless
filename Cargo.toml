@@ -6,6 +6,7 @@ members = [
     "crates/borderless-server",
     "crates/borderless-signaling",
     "crates/borderless-relay",
+    "crates/borderless-agent",
 ]
 # apps/desktop/src-tauri is a Tauri v2 app requiring GTK/webkit2gtk system libs.
 # Build it independently with: cd apps/desktop && npm run tauri build

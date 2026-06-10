@@ -1,0 +1,29 @@
+# Borderless Agent Configuration
+# Copy to /etc/borderless-agent/config.toml and fill in your values.
+# Run `sudo borderless-agent install` to auto-create this file and the systemd service.
+
+[agent]
+# Base URL of your Borderless API server (no trailing slash, no /v1)
+server_url  = "https://borderless.myowncloud.tech/api"
+
+# Name shown in the device list in the web dashboard
+device_name = "proxmox-01"
+
+# TCP port for incoming KVM peer connections (default: 49152)
+# listen_port = 49152
+
+[auth]
+# Credentials for a Borderless account that owns this device
+email    = "admin@example.com"
+password = "your-password-here"
+
+[features]
+# Sync clipboard with your desktop and other Borderless devices
+clipboard_sync = true
+
+# Inject keyboard + mouse events via Linux uinput (no display needed)
+# Requires the agent process to be in the `input` group (handled by systemd unit)
+input_inject = true
+
+# How often to poll the server for new clipboard entries (seconds)
+poll_interval_secs = 3
