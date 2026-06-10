@@ -3,6 +3,8 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { Device } from '@/lib/types'
 
+export const metadata = { title: 'Dashboard' }
+
 export default async function DashboardPage() {
   let devices: Device[] = []
   try { devices = await api.getDevices() } catch {}
@@ -14,7 +16,7 @@ export default async function DashboardPage() {
       <h1 className="text-2xl font-bold mb-6">Fleet Overview</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card>
-          <div className="text-4xl font-bold" style={{color:'#6750A4'}}>{devices.length}</div>
+          <div className="text-4xl font-bold text-primary">{devices.length}</div>
           <div className="text-sm text-gray-400 mt-1">Total Devices</div>
         </Card>
         <Card>

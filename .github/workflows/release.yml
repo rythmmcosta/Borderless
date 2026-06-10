@@ -61,7 +61,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: apps/desktop/src-tauri/target/release/bundle/**/*
-          draft: true
           generate_release_notes: true
 
   release-mobile:
@@ -107,7 +106,6 @@ jobs:
           files: |
             apps/mobile/build/app/outputs/flutter-apk/app-release.apk
             apps/mobile/build/app/outputs/bundle/release/app-release.aab
-          draft: true
           generate_release_notes: true
 
   release-docker:
