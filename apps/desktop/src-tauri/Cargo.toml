@@ -1,3 +1,5 @@
+[workspace]
+
 [package]
 name        = "borderless-desktop"
 version     = "0.1.0"
@@ -22,7 +24,6 @@ tokio      = { version = "1.35", features = ["full"] }
 uuid       = { version = "1.6",  features = ["v4", "serde"] }
 tracing    = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
-borderless-core = { path = "../../../crates/borderless-core" }
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

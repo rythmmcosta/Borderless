@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 
 # Copy workspace manifests first to cache dependency layer
-COPY Cargo.toml Cargo.lock ./
+COPY Cargo.toml Cargo.lock* ./
 COPY crates/borderless-core/Cargo.toml      crates/borderless-core/Cargo.toml
 COPY crates/borderless-protocol/Cargo.toml  crates/borderless-protocol/Cargo.toml
 COPY crates/borderless-server/Cargo.toml    crates/borderless-server/Cargo.toml
