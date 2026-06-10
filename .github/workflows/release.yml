@@ -47,7 +47,7 @@ jobs:
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_KEY_PASSWORD }}
-        run: pnpm install --frozen-lockfile && pnpm tauri build --target ${{ matrix.target }}
+        run: pnpm install --no-frozen-lockfile && pnpm tauri build --target ${{ matrix.target }}
       - name: Upload desktop artifacts
         uses: softprops/action-gh-release@v1
         with:
@@ -89,7 +89,7 @@ jobs:
         run: |
           flutter pub get
           flutter build apk --release
-      - name: Build release AAB (Play Store)
+      - name: Build release AAB
         working-directory: apps/mobile
         run: flutter build appbundle --release
       - name: Upload APK to Release
@@ -115,6 +115,11 @@ jobs:
             image: borderless-signaling
     steps:
       - uses: actions/checkout@v4
+      - name: Compute safe Docker tag
+        id: tag
+        run: |
+          safe=$(echo '${{ github.ref_name }}' | tr '/' '-' | tr ':' '-')
+          echo "value=${safe}" >> "$GITHUB_OUTPUT"
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
@@ -126,6 +131,6 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: true
-          tags: ghcr.io/rythmmcosta/${{ matrix.image }}:${{ github.ref_name }}
+          tags: ghcr.io/rythmmcosta/${{ matrix.image }}:${{ steps.tag.outputs.value }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
