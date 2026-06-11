@@ -8,6 +8,7 @@ use crate::{error::ApiError, state::AppState};
 pub struct Claims { pub sub: Uuid, pub email: String, pub role: String, pub exp: usize, pub iat: usize }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct AuthUser { pub id: Uuid, pub email: String, pub role: String }
 
 pub async fn require_auth(State(state): State<AppState>, mut req: Request<Body>, next: Next) -> Result<Response, ApiError> {

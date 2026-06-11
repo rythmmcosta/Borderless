@@ -114,7 +114,7 @@ export default function Hero() {
               <div className="flex items-center gap-2">
                 <span className="text-violet-400">⇄</span>
                 <span className="text-gray-400">Clipboard sync:</span>
-                <span className="text-gray-300">"docker compose up -d"</span>
+                <span className="text-gray-300">&quot;docker compose up -d&quot;</span>
               </div>
               <div className="mt-1 text-gray-700 text-[10px]">
                 Latency: 2ms · Devices: 4 · Uptime: 3d 14h

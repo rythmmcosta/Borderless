@@ -57,6 +57,7 @@ pub async fn delete(db: &PgPool, id: Uuid, user_id: Uuid) -> Result<bool, sqlx::
     Ok(r.rows_affected() > 0)
 }
 
+#[allow(dead_code)]
 pub async fn set_online(db: &PgPool, device_id: Uuid, online: bool, ip: Option<String>) {
     let _ = sqlx::query(
         "UPDATE devices SET is_online = $1, last_seen_at = NOW(), last_ip = $2::INET WHERE id = $3",

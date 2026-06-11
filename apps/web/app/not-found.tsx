@@ -10,7 +10,7 @@ export default function NotFound() {
         <p className="text-8xl font-bold text-white/5">404</p>
         <div className="-mt-8">
           <h1 className="text-2xl font-bold text-white">Page not found</h1>
-          <p className="mt-2 text-sm text-gray-500">The page you're looking for doesn't exist or has been moved.</p>
+          <p className="mt-2 text-sm text-gray-500">The page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/"

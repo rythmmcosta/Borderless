@@ -16,7 +16,7 @@ export default async function AdminAuditPage() {
   let logs: AuditLog[] = []
   try { logs = await api.getAuditLogs() } catch {}
 
-  const resourceTypes = [...new Set(logs.map((l) => l.resource_type))].slice(0, 5)
+  const resourceTypes = Array.from(new Set(logs.map((l) => l.resource_type))).slice(0, 5)
 
   return (
     <div className="space-y-6">

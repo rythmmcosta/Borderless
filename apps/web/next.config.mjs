@@ -1,8 +1,6 @@
-import type { NextConfig } from 'next'
-
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",   // Next.js hydration requires unsafe-inline
+  "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self'",
@@ -10,7 +8,8 @@ const CSP = [
   "frame-ancestors 'none'",
 ].join('; ')
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   output: 'standalone',
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://borderless.myowncloud.tech',
@@ -22,12 +21,12 @@ const nextConfig: NextConfig = {
       {
         source: '/:path*',
         headers: [
-          { key: 'X-Content-Type-Options',    value: 'nosniff' },
-          { key: 'X-Frame-Options',           value: 'DENY' },
-          { key: 'X-XSS-Protection',          value: '1; mode=block' },
-          { key: 'Referrer-Policy',           value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy',        value: 'camera=(), microphone=(), geolocation=()' },
-          { key: 'Content-Security-Policy',   value: CSP },
+          { key: 'X-Content-Type-Options',  value: 'nosniff' },
+          { key: 'X-Frame-Options',         value: 'DENY' },
+          { key: 'X-XSS-Protection',        value: '1; mode=block' },
+          { key: 'Referrer-Policy',         value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy',      value: 'camera=(), microphone=(), geolocation=()' },
+          { key: 'Content-Security-Policy', value: CSP },
         ],
       },
     ]

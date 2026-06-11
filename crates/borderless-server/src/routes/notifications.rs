@@ -1,4 +1,4 @@
-use axum::{Router, Json, extract::{State, Path, Query}, http::StatusCode, routing::{get, patch, post}};
+use axum::{Router, Json, extract::{State, Path, Query}, http::StatusCode, routing::{get, patch}};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use crate::{db, state::AppState, error::ApiError};
