@@ -2,7 +2,7 @@
 
 use axum::{
     Router, Extension, Json,
-    routing::{get, post},
+    routing::{delete, get, post},
     extract::{State, Path, Query},
     http::StatusCode,
 };
@@ -20,7 +20,7 @@ pub fn routes() -> Router<AppState> {
         .route("/devices/:id/unlock", post(unlock_device))
         .route("/devices/:id/remote", post(init_remote_session))
         .route("/sessions",           get(list_all_sessions))
-        .route("/sessions/:id",       post(terminate_session))
+        .route("/sessions/:id",       delete(terminate_session))
         .route("/audit",              get(get_audit_log))
         .route("/stats",              get(get_stats))
         .route_layer(axum::middleware::from_fn(crate::middleware::auth::require_admin))
@@ -57,7 +57,8 @@ async fn list_all_devices(State(state): State<AppState>, Query(params): Query<De
 
 async fn get_device_detail(State(state): State<AppState>, Path(device_id): Path<Uuid>) -> Result<Json<DeviceDetail>, ApiError> {
     let device = sqlx::query_as!(DeviceDetail,
-        r#"SELECT d.*, u.email as user_email FROM devices d JOIN users u ON u.id = d.user_id WHERE d.id = $1"#,
+        r#"SELECT d.id, d.name, d.platform, d.is_online, u.email as user_email
+           FROM devices d JOIN users u ON u.id = d.user_id WHERE d.id = $1"#,
         device_id).fetch_optional(&state.db).await?.ok_or(ApiError::NotFound)?;
     Ok(Json(device))
 }

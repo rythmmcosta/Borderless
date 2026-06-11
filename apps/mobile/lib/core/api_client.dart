@@ -29,7 +29,8 @@ class ApiClient extends ChangeNotifier {
     if (res.statusCode == 200) {
       final data = jsonDecode(res.body) as Map<String, dynamic>;
       _token = data['access_token'] as String?;
-      await prefs.setString('auth_token', _token ?? '');
+      if (_token == null) throw Exception('Login failed: no access_token in response');
+      await prefs.setString('auth_token', _token!);
       notifyListeners();
     } else {
       throw Exception('Login failed: ${res.body}');
@@ -49,7 +50,7 @@ class ApiClient extends ChangeNotifier {
       final list = jsonDecode(res.body) as List<dynamic>;
       return list.map((e) => Device.fromJson(e as Map<String, dynamic>)).toList();
     }
-    return [];
+    throw Exception('Failed to fetch devices: ${res.statusCode}');
   }
 
   Future<List<ClipboardEntry>> getClipboard() async {
@@ -58,7 +59,7 @@ class ApiClient extends ChangeNotifier {
       final list = jsonDecode(res.body) as List<dynamic>;
       return list.map((e) => ClipboardEntry.fromJson(e as Map<String, dynamic>)).toList();
     }
-    return [];
+    throw Exception('Failed to fetch clipboard: ${res.statusCode}');
   }
 
   Future<void> updateServerUrl(String url) async {

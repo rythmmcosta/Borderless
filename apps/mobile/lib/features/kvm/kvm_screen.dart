@@ -116,12 +116,6 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 16),
           const Text('Select a device and tap link to start KVM',
               style: TextStyle(color: Colors.grey)),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.devices),
-            label: const Text('Back to Devices'),
-          ),
         ],
       ),
     );

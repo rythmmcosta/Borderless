@@ -21,12 +21,12 @@ export function useDevices(pollMs = 3000) {
   }, []);
 
   const connect = useCallback(async (id: string) => {
-    await invoke("connect_device", { deviceId: id });
+    await invoke("connect_device", { device_id: id });
     await refresh();
   }, [refresh]);
 
   const disconnect = useCallback(async (id: string) => {
-    await invoke("disconnect_device", { deviceId: id });
+    await invoke("disconnect_device", { device_id: id });
     await refresh();
   }, [refresh]);
 

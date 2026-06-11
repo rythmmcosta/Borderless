@@ -44,7 +44,8 @@ async fn login(
 ) -> Result<Json<AuthTokens>, ApiError> {
     let user = db::users::get_by_email(&state.db, &req.email).await?
         .ok_or_else(|| ApiError::unauth("Invalid credentials"))?;
-    let hash_str = user.password_hash.as_deref().unwrap_or("");
+    let hash_str = user.password_hash.as_deref()
+        .ok_or_else(|| ApiError::unauth("Invalid credentials"))?;
     PasswordHash::new(hash_str)
         .and_then(|h| Argon2::default().verify_password(req.password.as_bytes(), &h))
         .map_err(|_| ApiError::unauth("Invalid credentials"))?;

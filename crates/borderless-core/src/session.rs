@@ -387,6 +387,12 @@ impl SessionManager {
         }
     }
 
+    pub async fn disconnect(&self, peer_id: Uuid) {
+        if let Some(session) = self.sessions.read().await.get(&peer_id) {
+            session.close().await;
+        }
+    }
+
     pub async fn active_sessions(&self) -> Vec<Arc<Session>> {
         self.sessions
             .read()

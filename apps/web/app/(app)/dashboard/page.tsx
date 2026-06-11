@@ -28,7 +28,7 @@ export default async function DashboardPage() {
 
   const online  = devices.filter((d) => d.is_online).length
   const locked  = devices.filter((d) => d.is_locked).length
-  const active  = sessions.filter((s) => s.status === 'active').length
+  const active  = sessions.filter((s) => !s.ended_at).length
 
   return (
     <div className="space-y-8">
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
         <div>
           <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Live Sessions</h3>
           <div className="space-y-2">
-            {sessions.filter((s) => s.status === 'active').slice(0, 5).map((s) => (
+            {sessions.filter((s) => !s.ended_at).slice(0, 5).map((s) => (
               <div key={s.id} className="flex items-center gap-4 rounded-xl border border-white/6 bg-surface-1 px-4 py-3">
                 <div className="h-2 w-2 shrink-0 rounded-full bg-emerald-400 animate-pulse-slow" />
                 <div className="flex-1 min-w-0">

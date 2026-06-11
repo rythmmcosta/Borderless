@@ -103,10 +103,9 @@ pub async fn disconnect_device(
     state: State<'_, AppState>,
     device_id: String,
 ) -> Result<(), String> {
-    let mut lock = state.engine.lock().await;
-    let engine = lock.as_mut().ok_or("Engine not running")?;
-    let _ = uuid::Uuid::parse_str(&device_id).map_err(|e| e.to_string())?;
-    engine.stop();
-    engine.start().await.map_err(|e| e.to_string())?;
+    let lock = state.engine.lock().await;
+    let engine = lock.as_ref().ok_or("Engine not running")?;
+    let id = uuid::Uuid::parse_str(&device_id).map_err(|e| e.to_string())?;
+    engine.disconnect(id).await;
     Ok(())
 }

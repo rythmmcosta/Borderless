@@ -100,6 +100,11 @@ impl BorderlessEngine {
         self.discovery.peers()
     }
 
+    pub async fn disconnect(&self, peer_id: uuid::Uuid) {
+        self.session_mgr.disconnect(peer_id).await;
+        tracing::info!(%peer_id, "Disconnected from peer");
+    }
+
     pub fn stop(&mut self) {
         self.session_mgr.stop_all();
         self.discovery.stop();

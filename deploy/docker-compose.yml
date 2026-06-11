@@ -19,6 +19,12 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:1420,https://borderless.myowncloud.tech}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@borderless.local}
       RUST_LOG: borderless_server=debug,tower_http=info
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8080/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
     depends_on:
       db:
         condition: service_healthy
@@ -34,8 +40,8 @@ services:
       - "8081:8081"
     environment:
       PORT: 8081
-      REDIS_URL: redis://:${REDIS_PASSWORD:-borderless}@redis:6379
-      JWT_SECRET: ${JWT_SECRET:-change_me_in_production_min_32_chars}
+      REDIS_URL: redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env — run: openssl rand -hex 32}
       RUST_LOG: borderless_signaling=debug
     depends_on:
       redis:
@@ -100,10 +106,11 @@ services:
       NEXT_PUBLIC_API_URL: /api
       NEXT_PUBLIC_WS_URL: ${WS_URL:-wss://borderless.myowncloud.tech/ws}
       INTERNAL_API_URL: http://api:8080
-      GITHUB_OWNER: rythmmcosta
-      GITHUB_REPO: Borderless
+      GITHUB_OWNER: ${GITHUB_OWNER:-rythmmcosta}
+      GITHUB_REPO: ${GITHUB_REPO:-Borderless}
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:

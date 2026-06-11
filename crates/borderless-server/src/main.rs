@@ -43,6 +43,14 @@ async fn main() -> anyhow::Result<()> {
         .allow_headers([axum::http::header::AUTHORIZATION, axum::http::header::CONTENT_TYPE])
         .allow_credentials(true);
 
+    // Admin routes need require_auth first (to populate AuthUser extension),
+    // then require_admin (already applied inside admin::routes()) to check role.
+    let admin_routes = routes::admin::routes()
+        .route_layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::auth::require_auth,
+        ));
+
     let app = Router::new()
         .nest("/v1/health",        routes::health::routes())
         .nest("/v1/auth",          routes::auth::routes())
@@ -51,7 +59,7 @@ async fn main() -> anyhow::Result<()> {
         .nest("/v1/transfers",     routes::transfers::routes())
         .nest("/v1/notifications", routes::notifications::routes())
         .nest("/v1/sessions",      routes::sessions::routes())
-        .nest("/v1/admin",         routes::admin::routes())
+        .nest("/v1/admin",         admin_routes)
         .nest("/v1/ws",            ws::routes())
         .layer(cors)
         .layer(TraceLayer::new_for_http())

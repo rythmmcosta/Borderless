@@ -21,7 +21,11 @@ impl Config {
             port:               std::env::var("PORT").unwrap_or_else(|_| "8080".into()).parse()?,
             database_url:       std::env::var("DATABASE_URL")?,
             redis_url:          std::env::var("REDIS_URL")?,
-            jwt_secret:         std::env::var("JWT_SECRET")?,
+            jwt_secret:         {
+                let s = std::env::var("JWT_SECRET")?;
+                if s.len() < 32 { return Err(anyhow::anyhow!("JWT_SECRET must be at least 32 characters")); }
+                s
+            },
             jwt_expiry_secs:    std::env::var("JWT_EXPIRY_SECS").unwrap_or_else(|_| "900".into()).parse()?,
             refresh_expiry_secs: std::env::var("REFRESH_EXPIRY_SECS").unwrap_or_else(|_| "2592000".into()).parse()?,
             admin_email:        std::env::var("ADMIN_EMAIL").unwrap_or_else(|_| "admin@borderless.local".into()),
