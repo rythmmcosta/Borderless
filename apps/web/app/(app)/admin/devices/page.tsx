@@ -23,7 +23,7 @@ export default async function AdminDevicesPage() {
         <p className="mt-1 text-sm text-gray-500">{devices.length} devices · {online} online</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
           { label: 'Total',  value: devices.length, color: 'text-white' },
           { label: 'Online', value: online,          color: 'text-emerald-400' },
@@ -60,10 +60,10 @@ export default async function AdminDevicesPage() {
               <Td className="text-xs text-gray-500">{d.last_seen_at ? new Date(d.last_seen_at).toLocaleString() : '—'}</Td>
               <Td>
                 <div className="flex items-center gap-1.5 justify-end">
-                  <button className="rounded-md border border-white/8 bg-white/4 px-2.5 py-1 text-xs text-gray-400 hover:text-white hover:bg-white/8 transition-colors">
+                  <button className="rounded-lg border border-white/8 bg-white/4 px-3 py-2 text-xs text-gray-400 hover:text-white hover:bg-white/8 transition-colors min-h-[36px]">
                     {d.is_locked ? 'Unlock' : 'Lock'}
                   </button>
-                  <button className="rounded-md border border-red-500/20 bg-red-500/8 px-2.5 py-1 text-xs text-red-400 hover:bg-red-500/15 transition-colors">
+                  <button className="rounded-lg border border-red-500/20 bg-red-500/8 px-3 py-2 text-xs text-red-400 hover:bg-red-500/15 transition-colors min-h-[36px]">
                     Remove
                   </button>
                 </div>

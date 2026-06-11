@@ -32,26 +32,26 @@ export default function Comparison() {
         </div>
 
         <div className="overflow-x-auto rounded-2xl border border-white/6">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[480px] text-sm">
             <thead>
               <tr className="border-b border-white/8">
-                <th className="py-4 pl-5 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Feature</th>
-                <th className="py-4 px-4 text-center">
+                <th className="py-4 pl-4 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-5">Feature</th>
+                <th className="py-4 px-3 text-center sm:px-4">
                   <div className="inline-flex flex-col items-center gap-1">
                     <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white">B</span>
                     <span className="text-xs font-semibold text-white">Borderless</span>
                   </div>
                 </th>
-                <th className="py-4 px-4 text-center">
+                <th className="py-4 px-3 text-center sm:px-4">
                   <div className="inline-flex flex-col items-center gap-1">
                     <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-xs font-bold text-gray-300">S</span>
                     <span className="text-xs font-medium text-gray-400">Synergy</span>
                   </div>
                 </th>
-                <th className="py-4 px-4 text-center">
+                <th className="py-4 px-3 text-center sm:px-4">
                   <div className="inline-flex flex-col items-center gap-1">
                     <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-xs font-bold text-gray-300">M</span>
-                    <span className="text-xs font-medium text-gray-400 whitespace-nowrap">Mouse w/o Borders</span>
+                    <span className="text-xs font-medium text-gray-400">Mouse w/o&nbsp;Borders</span>
                   </div>
                 </th>
               </tr>
@@ -59,14 +59,14 @@ export default function Comparison() {
             <tbody className="divide-y divide-white/4">
               {rows.map((r) => (
                 <tr key={r.feature} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-3.5 pl-5 text-gray-300">{r.feature}</td>
-                  <td className="py-3.5 px-4 text-center bg-primary/5">
+                  <td className="py-3 pl-4 text-gray-300 text-xs sm:py-3.5 sm:pl-5 sm:text-sm">{r.feature}</td>
+                  <td className="py-3 px-3 text-center bg-primary/5 sm:py-3.5 sm:px-4">
                     <Cell val={r.borderless} />
                   </td>
-                  <td className="py-3.5 px-4 text-center">
+                  <td className="py-3 px-3 text-center sm:py-3.5 sm:px-4">
                     <Cell val={r.synergy} />
                   </td>
-                  <td className="py-3.5 px-4 text-center">
+                  <td className="py-3 px-3 text-center sm:py-3.5 sm:px-4">
                     <Cell val={r.mwb} />
                   </td>
                 </tr>

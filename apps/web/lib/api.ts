@@ -1,21 +1,28 @@
+import { cookies } from 'next/headers'
 import type { User, Device, Session, AuditLog } from './types'
 
 function getBase(): string {
   if (typeof window === 'undefined') {
-    // Server-side (SSR / ISR) — connect directly to the Rust backend
     return process.env.INTERNAL_API_URL ?? 'http://localhost:8080'
   }
-  // Client-side browser — goes through Nginx /api proxy
   return process.env.NEXT_PUBLIC_API_URL ?? '/api'
 }
 
 async function get<T>(path: string, opts?: RequestInit): Promise<T> {
   const base = getBase()
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+
+  if (typeof window === 'undefined') {
+    const token = (await cookies()).get('borderless_token')?.value
+    if (token) headers.Authorization = `Bearer ${token}`
+  }
+
   const res = await fetch(`${base}${path}`, {
     next: { revalidate: 30 },
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     ...opts,
   })
+  if (res.status === 401) throw new Error('Unauthorized')
   if (!res.ok) throw new Error(`${res.status} ${path}`)
   return res.json() as Promise<T>
 }

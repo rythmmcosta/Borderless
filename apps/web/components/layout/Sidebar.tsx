@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const nav = [
@@ -42,17 +42,35 @@ const nav = [
   },
 ]
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const path = usePathname()
+  const router = useRouter()
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+    router.refresh()
+  }
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-r border-white/6 bg-surface">
-      {/* Logo */}
+    <aside className="flex h-full w-64 shrink-0 flex-col border-r border-white/6 bg-surface">
+      {/* Logo + mobile close */}
       <div className="flex h-16 items-center gap-2.5 border-b border-white/6 px-4">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-violet-500 text-xs font-bold text-white">
           B
         </div>
         <span className="text-[15px] font-semibold text-white">Borderless</span>
+        {onClose && (
+          <button
+            onClick={onClose}
+            aria-label="Close navigation"
+            className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors md:hidden"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Nav */}
@@ -70,7 +88,7 @@ export function Sidebar() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors',
+                      'flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-sm transition-colors',
                       active
                         ? 'bg-primary/15 text-primary-light font-medium'
                         : 'text-gray-400 hover:text-white hover:bg-white/5',
@@ -87,16 +105,25 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-white/5 p-4">
+      <div className="border-t border-white/5 p-4 space-y-1">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+          className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-gray-600 hover:text-gray-400 hover:bg-white/4 transition-colors"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back to website
         </Link>
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-xs text-gray-600 hover:text-red-400 hover:bg-red-500/5 transition-colors"
+        >
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Sign out
+        </button>
       </div>
     </aside>
   )

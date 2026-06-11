@@ -26,7 +26,7 @@ export default async function AdminSessionsPage() {
         <p className="mt-1 text-sm text-gray-500">{sessions.length} total · {active} active</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
           { label: 'Active',   value: active,   color: active > 0 ? 'text-emerald-400' : 'text-white' },
           { label: 'WebRTC',   value: webrtc,   color: 'text-cyan-400' },
@@ -66,7 +66,7 @@ export default async function AdminSessionsPage() {
               <Td className="text-xs text-gray-500">{new Date(s.started_at).toLocaleString()}</Td>
               <Td>
                 {s.status === 'active' && (
-                  <button className="rounded-md border border-red-500/20 bg-red-500/8 px-2.5 py-1 text-xs text-red-400 hover:bg-red-500/15 transition-colors">
+                  <button className="rounded-lg border border-red-500/20 bg-red-500/8 px-3 py-2 text-xs text-red-400 hover:bg-red-500/15 transition-colors min-h-[36px]">
                     Terminate
                   </button>
                 )}

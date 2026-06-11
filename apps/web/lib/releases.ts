@@ -44,7 +44,12 @@ function mapAssets(raw: any[]): PlatformAsset[] {
       const key = `${p.platform}:${p.ext}`
       if (seen.has(key)) continue
       seen.add(key)
-      out.push({ platform: p.platform, label: p.label, ext: p.ext, url: a.browser_download_url, size: a.size })
+      const url: string = a.browser_download_url ?? ''
+      try {
+        const parsed = new URL(url)
+        if (!['github.com', 'objects.githubusercontent.com'].includes(parsed.hostname)) continue
+      } catch { continue }
+      out.push({ platform: p.platform, label: p.label, ext: p.ext, url, size: a.size })
       break
     }
   }
@@ -83,9 +88,12 @@ export async function getAllReleases(): Promise<Release[]> {
   }
 }
 
+const VERSION_RE = /^v?\d{1,4}\.\d{1,4}\.\d{1,4}(-[a-zA-Z0-9._-]{1,40})?$/
+
 export async function getReleaseByVersion(version: string): Promise<Release | null> {
+  if (!VERSION_RE.test(version)) return null
   try {
-    const d = await ghFetch(`/releases/tags/${version}`)
+    const d = await ghFetch(`/releases/tags/${encodeURIComponent(version)}`)
     return { version: d.tag_name, name: d.name, publishedAt: d.published_at, notes: d.body ?? '', githubUrl: d.html_url, assets: mapAssets(d.assets), prerelease: d.prerelease }
   } catch {
     return null

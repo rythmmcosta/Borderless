@@ -5,8 +5,8 @@ export default function Hero() {
     <section className="relative overflow-hidden bg-[#080810] py-28 md:py-40">
       {/* Gradient glows */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-[-10%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
-        <div className="absolute right-[-5%] bottom-[-10%] h-[400px] w-[500px] rounded-full bg-cyan-500/6 blur-[100px]" />
+        <div className="absolute left-1/2 top-[-10%] h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-primary/10 blur-[100px] md:h-[600px] md:w-[900px] md:blur-[120px]" />
+        <div className="absolute right-[-5%] bottom-[-10%] h-[200px] w-[300px] rounded-full bg-cyan-500/6 blur-[80px] md:h-[400px] md:w-[500px] md:blur-[100px]" />
       </div>
 
       {/* Grid overlay */}
@@ -28,7 +28,7 @@ export default function Hero() {
         </div>
 
         {/* Headline */}
-        <h1 className="animate-fade-up text-5xl font-bold leading-[1.08] tracking-tight text-white md:text-7xl lg:text-8xl">
+        <h1 className="animate-fade-up text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-7xl lg:text-8xl">
           One keyboard.
           <br />
           <span className="text-gradient">Every device.</span>
@@ -72,17 +72,17 @@ export default function Hero() {
         </div>
 
         {/* App preview */}
-        <div className="mx-auto mt-16 max-w-2xl animate-fade-up delay-400">
-          <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#0e0e14] shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
+        <div className="mx-auto mt-14 max-w-2xl animate-fade-up delay-400 md:mt-16">
+          <div className="overflow-hidden rounded-xl border border-white/8 bg-[#0e0e14] shadow-[0_20px_40px_rgba(0,0,0,0.5)] md:rounded-2xl md:shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
             {/* Window chrome */}
-            <div className="flex items-center gap-1.5 border-b border-white/6 bg-[#141420] px-4 py-3">
-              <span className="h-3 w-3 rounded-full bg-red-500/70" />
-              <span className="h-3 w-3 rounded-full bg-yellow-500/70" />
-              <span className="h-3 w-3 rounded-full bg-green-500/70" />
-              <span className="ml-auto text-xs text-gray-600 font-mono">borderless — server</span>
+            <div className="flex items-center gap-1.5 border-b border-white/6 bg-[#141420] px-3 py-2.5 md:px-4 md:py-3">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-500/70 md:h-3 md:w-3" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70 md:h-3 md:w-3" />
+              <span className="h-2.5 w-2.5 rounded-full bg-green-500/70 md:h-3 md:w-3" />
+              <span className="ml-auto text-[10px] text-gray-600 font-mono md:text-xs">borderless — server</span>
             </div>
             {/* Terminal */}
-            <div className="space-y-2 px-5 py-5 font-mono text-xs text-left">
+            <div className="space-y-2 px-3 py-3 font-mono text-[10px] text-left md:px-5 md:py-5 md:text-xs">
               <div className="flex items-center gap-2">
                 <span className="text-emerald-400">✓</span>
                 <span className="text-gray-400">Server listening on</span>

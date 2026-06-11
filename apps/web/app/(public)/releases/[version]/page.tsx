@@ -125,7 +125,23 @@ export default async function ReleasePage({ params }: { params: { version: strin
               Release Notes
             </h2>
             <div className="prose prose-invert prose-dark max-w-none rounded-2xl border border-white/6 bg-surface-1 p-6 md:p-8 prose-a:text-primary-light prose-code:text-gray-300 prose-pre:bg-[#0a0a12] prose-pre:border prose-pre:border-white/6 prose-headings:text-white prose-strong:text-white">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{release.notes}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  a: ({ href, children }) => {
+                    const safe = href && /^https?:\/\//.test(href)
+                    if (!safe) return <span>{children}</span>
+                    const isExt = !href.includes('github.com/rythmmcosta/Borderless')
+                    return (
+                      <a href={href} target={isExt ? '_blank' : undefined} rel={isExt ? 'noreferrer noopener' : undefined}>
+                        {children}
+                      </a>
+                    )
+                  },
+                }}
+              >
+                {release.notes}
+              </ReactMarkdown>
             </div>
           </div>
         )}

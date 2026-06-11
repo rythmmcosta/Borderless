@@ -87,11 +87,14 @@ services:
     image: ghcr.io/rythmmcosta/borderless-server:latest
     ports: ["8080:8080"]
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/borderless
-      JWT_SECRET: change_me_min_32_chars
+      DATABASE_URL: postgres://admin:<STRONG_DB_PASSWORD>@db:5432/borderless
+      JWT_SECRET: <RUN: openssl rand -hex 32>
   db:
     image: postgres:16-alpine
-    environment: { POSTGRES_DB: borderless, POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres }`}</code>
+    environment:
+      POSTGRES_DB: borderless
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: <STRONG_DB_PASSWORD>`}</code>
           </pre>
           <p className="mt-3 text-xs text-gray-600">
             Full compose with Redis, TURN server, and web dashboard:{' '}
