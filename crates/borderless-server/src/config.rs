@@ -10,6 +10,7 @@ pub struct Config {
     pub jwt_expiry_secs:       u64,
     pub refresh_expiry_secs:   u64,
     pub admin_email:           String,
+    pub allowed_origin:        String,
 }
 
 impl Config {
@@ -24,6 +25,13 @@ impl Config {
             jwt_expiry_secs:    std::env::var("JWT_EXPIRY_SECS").unwrap_or_else(|_| "900".into()).parse()?,
             refresh_expiry_secs: std::env::var("REFRESH_EXPIRY_SECS").unwrap_or_else(|_| "2592000".into()).parse()?,
             admin_email:        std::env::var("ADMIN_EMAIL").unwrap_or_else(|_| "admin@borderless.local".into()),
+            allowed_origin:     std::env::var("CORS_ORIGINS")
+                                    .unwrap_or_else(|_| "http://localhost:3000".into())
+                                    .split(',')
+                                    .next()
+                                    .unwrap_or("http://localhost:3000")
+                                    .trim()
+                                    .to_string(),
         })
     }
 }

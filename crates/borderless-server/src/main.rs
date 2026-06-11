@@ -26,10 +26,22 @@ async fn main() -> anyhow::Result<()> {
     sqlx::migrate!("../../migrations").run(&state.db).await?;
     tracing::info!("Migrations complete");
 
+    let allowed_origin = cfg.allowed_origin.clone();
     let cors = CorsLayer::new()
-        .allow_origin(tower_http::cors::Any)
-        .allow_methods(tower_http::cors::Any)
-        .allow_headers(tower_http::cors::Any);
+        .allow_origin(
+            allowed_origin
+                .parse::<axum::http::HeaderValue>()
+                .unwrap_or_else(|_| "http://localhost:3000".parse().unwrap()),
+        )
+        .allow_methods([
+            axum::http::Method::GET,
+            axum::http::Method::POST,
+            axum::http::Method::PUT,
+            axum::http::Method::PATCH,
+            axum::http::Method::DELETE,
+        ])
+        .allow_headers([axum::http::header::AUTHORIZATION, axum::http::header::CONTENT_TYPE])
+        .allow_credentials(true);
 
     let app = Router::new()
         .nest("/v1/health",        routes::health::routes())

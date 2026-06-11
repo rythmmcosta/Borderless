@@ -15,7 +15,8 @@ export default async function AdminSessionsPage() {
   let sessions: Session[] = []
   try { sessions = await api.getAdminSessions() } catch {}
 
-  const active    = sessions.filter((s) => s.status === 'active').length
+  // Derive status from ended_at — backend SessionSummary doesn't include a status column
+  const active    = sessions.filter((s) => !s.ended_at).length
   const webrtc    = sessions.filter((s) => s.transport === 'webrtc').length
   const relayed   = sessions.filter((s) => s.transport === 'relay').length
 
@@ -44,35 +45,43 @@ export default async function AdminSessionsPage() {
           <Tr><Th>Session ID</Th><Th>Type</Th><Th>Transport</Th><Th>Status</Th><Th>Started</Th><Th></Th></Tr>
         </THead>
         <TBody>
-          {sessions.map((s) => (
-            <Tr key={s.id}>
-              <Td>
-                <div className="flex items-center gap-2">
-                  {s.status === 'active' && (
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400 animate-pulse" />
+          {sessions.map((s) => {
+            const isActive = !s.ended_at
+            return (
+              <Tr key={s.id}>
+                <Td>
+                  <div className="flex items-center gap-2">
+                    {isActive && (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400 animate-pulse" />
+                    )}
+                    <span className="font-mono text-xs text-gray-300">{s.id.slice(0, 14)}…</span>
+                  </div>
+                </Td>
+                <Td className="text-sm capitalize text-gray-400">
+                  {s.session_type}
+                  {(s.source_name || s.target_name) && (
+                    <p className="text-xs text-gray-600 mt-0.5">{s.source_name} → {s.target_name}</p>
                   )}
-                  <span className="font-mono text-xs text-gray-300">{s.id.slice(0, 14)}…</span>
-                </div>
-              </Td>
-              <Td className="text-sm capitalize text-gray-400">{s.session_type}</Td>
-              <Td>
-                <span className={`text-xs font-medium ${transportColor[s.transport] ?? 'text-gray-400'}`}>
-                  {s.transport}
-                </span>
-              </Td>
-              <Td>
-                <Badge variant={s.status === 'active' ? 'success' : 'default'}>{s.status}</Badge>
-              </Td>
-              <Td className="text-xs text-gray-500">{new Date(s.started_at).toLocaleString()}</Td>
-              <Td>
-                {s.status === 'active' && (
-                  <button className="rounded-lg border border-red-500/20 bg-red-500/8 px-3 py-2 text-xs text-red-400 hover:bg-red-500/15 transition-colors min-h-[36px]">
-                    Terminate
-                  </button>
-                )}
-              </Td>
-            </Tr>
-          ))}
+                </Td>
+                <Td>
+                  <span className={`text-xs font-medium ${transportColor[s.transport] ?? 'text-gray-400'}`}>
+                    {s.transport}
+                  </span>
+                </Td>
+                <Td>
+                  <Badge variant={isActive ? 'success' : 'default'}>{isActive ? 'active' : 'ended'}</Badge>
+                </Td>
+                <Td className="text-xs text-gray-500">{new Date(s.started_at).toLocaleString()}</Td>
+                <Td>
+                  {isActive && (
+                    <button className="rounded-lg border border-red-500/20 bg-red-500/8 px-3 py-2 text-xs text-red-400 hover:bg-red-500/15 transition-colors min-h-[36px]">
+                      Terminate
+                    </button>
+                  )}
+                </Td>
+              </Tr>
+            )
+          })}
           {sessions.length === 0 && (
             <Tr><Td colSpan={6} className="py-16 text-center text-gray-600">No sessions recorded.</Td></Tr>
           )}

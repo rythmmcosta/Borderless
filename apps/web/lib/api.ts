@@ -2,10 +2,10 @@ import { cookies } from 'next/headers'
 import type { User, Device, Session, AuditLog } from './types'
 
 function getBase(): string {
-  if (typeof window === 'undefined') {
-    return process.env.INTERNAL_API_URL ?? 'http://localhost:8080'
-  }
-  return process.env.NEXT_PUBLIC_API_URL ?? '/api'
+  const root = typeof window === 'undefined'
+    ? (process.env.INTERNAL_API_URL ?? 'http://localhost:8080')
+    : (process.env.NEXT_PUBLIC_API_URL ?? '/api')
+  return `${root}/v1`
 }
 
 async function get<T>(path: string, opts?: RequestInit): Promise<T> {
@@ -30,7 +30,7 @@ async function get<T>(path: string, opts?: RequestInit): Promise<T> {
 export const api = {
   getDevices:       () => get<Device[]>('/devices'),
   getAdminDevices:  () => get<Device[]>('/admin/devices'),
-  getAdminUsers:    () => get<User[]>('/admin/users'),
+  getAdminUsers:    () => get<{ items: User[] }>('/admin/users').then((r) => r.items),
   getAdminSessions: () => get<Session[]>('/admin/sessions'),
   getAuditLogs:     () => get<AuditLog[]>('/admin/audit'),
 }

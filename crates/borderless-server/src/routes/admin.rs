@@ -47,7 +47,7 @@ async fn get_user_detail(State(state): State<AppState>, Path(user_id): Path<Uuid
 async fn list_all_devices(State(state): State<AppState>, Query(params): Query<DeviceFilterParams>) -> Result<Json<Vec<DeviceSummary>>, ApiError> {
     let devices = sqlx::query_as!(DeviceSummary,
         r#"SELECT d.id, d.name, d.platform, d.os_version, d.app_version,
-                  d.is_online, d.last_ip::TEXT as last_ip, d.last_seen_at,
+                  d.is_online, d.is_locked, d.last_ip::TEXT as last_ip, d.last_seen_at,
                   u.email as user_email, u.display_name as user_name
            FROM devices d JOIN users u ON u.id = d.user_id
            WHERE ($1::BOOL IS NULL OR d.is_online = $1) ORDER BY d.last_seen_at DESC NULLS LAST"#,
@@ -113,7 +113,7 @@ pub struct AuditFilterParams { pub offset: Option<i64>, pub limit: Option<i64>, 
 
 async fn get_audit_log(State(state): State<AppState>, Query(params): Query<AuditFilterParams>) -> Result<Json<Vec<AuditEntry>>, ApiError> {
     let entries = sqlx::query_as!(AuditEntry,
-        r#"SELECT al.id, al.action, al.resource_type, al.resource_id, al.ip_address::TEXT as ip_address, al.metadata, al.created_at, u.email as actor_email
+        r#"SELECT al.id, al.actor_id, al.action, al.resource_type, al.resource_id, al.ip_address::TEXT as ip_address, al.metadata, al.created_at, u.email as actor_email
            FROM audit_logs al LEFT JOIN users u ON u.id = al.actor_id
            WHERE ($1::TEXT IS NULL OR al.action LIKE $1) AND ($2::UUID IS NULL OR al.actor_id = $2)
              AND ($3::TIMESTAMPTZ IS NULL OR al.created_at >= $3) AND ($4::TIMESTAMPTZ IS NULL OR al.created_at <= $4)
@@ -142,9 +142,9 @@ async fn audit(state: &AppState, actor_id: Uuid, action: &str, resource_id: Uuid
 
 #[derive(Debug, Serialize, sqlx::FromRow)] pub struct UserSummary { pub id: Uuid, pub email: String, pub display_name: Option<String>, pub role: String, pub created_at: chrono::DateTime<chrono::Utc>, pub last_seen_at: Option<chrono::DateTime<chrono::Utc>>, pub device_count: Option<i64> }
 #[derive(Debug, Serialize, sqlx::FromRow)] pub struct UserDetail { pub id: Uuid, pub email: String, pub display_name: Option<String>, pub role: String, pub mfa_enabled: bool, pub created_at: chrono::DateTime<chrono::Utc>, pub last_seen_at: Option<chrono::DateTime<chrono::Utc>> }
-#[derive(Debug, Serialize, sqlx::FromRow)] pub struct DeviceSummary { pub id: Uuid, pub name: String, pub platform: String, pub os_version: Option<String>, pub app_version: Option<String>, pub is_online: bool, pub last_ip: Option<String>, pub last_seen_at: Option<chrono::DateTime<chrono::Utc>>, pub user_email: String, pub user_name: Option<String> }
+#[derive(Debug, Serialize, sqlx::FromRow)] pub struct DeviceSummary { pub id: Uuid, pub name: String, pub platform: String, pub os_version: Option<String>, pub app_version: Option<String>, pub is_online: bool, pub is_locked: bool, pub last_ip: Option<String>, pub last_seen_at: Option<chrono::DateTime<chrono::Utc>>, pub user_email: String, pub user_name: Option<String> }
 #[derive(Debug, Serialize, sqlx::FromRow)] pub struct DeviceDetail { pub id: Uuid, pub name: String, pub platform: String, pub is_online: bool, pub user_email: String }
 #[derive(Debug, Serialize, sqlx::FromRow)] pub struct SessionSummary { pub id: Uuid, pub session_type: String, pub transport: String, pub started_at: chrono::DateTime<chrono::Utc>, pub ended_at: Option<chrono::DateTime<chrono::Utc>>, pub bytes_sent: i64, pub bytes_recv: i64, pub source_name: String, pub target_name: String }
-#[derive(Debug, Serialize, sqlx::FromRow)] pub struct AuditEntry { pub id: Uuid, pub action: String, pub resource_type: Option<String>, pub resource_id: Option<Uuid>, pub ip_address: Option<String>, pub metadata: serde_json::Value, pub created_at: chrono::DateTime<chrono::Utc>, pub actor_email: Option<String> }
+#[derive(Debug, Serialize, sqlx::FromRow)] pub struct AuditEntry { pub id: Uuid, pub actor_id: Option<Uuid>, pub actor_email: Option<String>, pub action: String, pub resource_type: Option<String>, pub resource_id: Option<Uuid>, pub ip_address: Option<String>, pub metadata: serde_json::Value, pub created_at: chrono::DateTime<chrono::Utc> }
 #[derive(Debug, Serialize)] pub struct AdminStats { pub total_users: i64, pub total_devices: i64, pub online_devices: i64, pub sessions_today: i64 }
 #[derive(Debug, Serialize)] pub struct PaginatedResponse<T> { pub items: Vec<T>, pub total: i64, pub offset: i64, pub limit: i64 }

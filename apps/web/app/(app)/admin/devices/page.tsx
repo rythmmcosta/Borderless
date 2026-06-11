@@ -50,7 +50,7 @@ export default async function AdminDevicesPage() {
                 </div>
               </Td>
               <Td className="capitalize">{d.platform}</Td>
-              <Td className="font-mono text-xs text-gray-500">{d.user_id.slice(0, 8)}…</Td>
+              <Td className="text-xs text-gray-500">{d.user_email ?? '—'}</Td>
               <Td>
                 <div className="flex items-center gap-1.5">
                   <Badge variant={d.is_online ? 'success' : 'default'}>{d.is_online ? 'Online' : 'Offline'}</Badge>

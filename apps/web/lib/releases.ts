@@ -34,7 +34,10 @@ const ASSET_PATTERNS: { re: RegExp; platform: Platform; label: string; ext: stri
   { re: /app-release\.aab$/i,   platform: 'android', label: 'Android App Bundle',         ext: '.aab'      },
 ]
 
-function mapAssets(raw: any[]): PlatformAsset[] {
+interface GhAsset { name: string; browser_download_url: string; size: number }
+interface GhRelease { tag_name: string; name: string; published_at: string; body: string | null; html_url: string; assets: GhAsset[]; prerelease: boolean; draft: boolean }
+
+function mapAssets(raw: GhAsset[]): PlatformAsset[] {
   const out: PlatformAsset[] = []
   const seen = new Set<string>()
 
@@ -79,7 +82,7 @@ export async function getLatestRelease(): Promise<Release | null> {
 
 export async function getAllReleases(): Promise<Release[]> {
   try {
-    const data: any[] = await ghFetch('/releases?per_page=20')
+    const data: GhRelease[] = await ghFetch('/releases?per_page=20')
     return data
       .filter((r) => !r.draft)
       .map((d) => ({ version: d.tag_name, name: d.name, publishedAt: d.published_at, notes: d.body ?? '', githubUrl: d.html_url, assets: mapAssets(d.assets), prerelease: d.prerelease }))

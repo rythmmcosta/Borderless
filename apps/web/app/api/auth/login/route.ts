@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   let res: Response
   try {
-    res = await fetch(`${BACKEND}/auth/login`, {
+    res = await fetch(`${BACKEND}/v1/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),

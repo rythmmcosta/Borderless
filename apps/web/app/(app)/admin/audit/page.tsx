@@ -47,9 +47,9 @@ export default async function AdminAuditPage() {
                 {new Date(l.created_at).toLocaleString()}
               </Td>
               <Td>
-                <span className="font-mono text-xs text-gray-400">
-                  {l.actor_id ? l.actor_id.slice(0, 8) + '…' : <span className="text-gray-600 italic">system</span>}
-                </span>
+                {l.actor_email
+                  ? <span className="text-xs text-gray-400">{l.actor_email}</span>
+                  : <span className="text-xs text-gray-600 italic">system</span>}
               </Td>
               <Td>
                 <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${actionColor(l.action)}`}>
