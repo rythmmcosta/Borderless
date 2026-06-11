@@ -13,8 +13,8 @@ DATA_DIR="/var/lib/borderless-agent"
 # ── Detect architecture ────────────────────────────────────────────────────────
 ARCH=$(uname -m)
 case $ARCH in
-  x86_64)  TARGET="x86_64-unknown-linux-musl" ;;
-  aarch64) TARGET="aarch64-unknown-linux-musl" ;;
+  x86_64)  TARGET="linux-x86_64" ;;
+  aarch64) TARGET="linux-arm64" ;;
   *) echo "Unsupported architecture: $ARCH" && exit 1 ;;
 esac
 

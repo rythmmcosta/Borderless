@@ -26,19 +26,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 })
   }
 
-  let data: { token?: string }
+  let data: { access_token?: string; refresh_token?: string; expires_in?: number }
   try {
     data = await res.json()
   } catch {
     return NextResponse.json({ error: 'Unexpected backend response.' }, { status: 502 })
   }
 
-  if (!data.token) {
+  if (!data.access_token) {
     return NextResponse.json({ error: 'No token in response.' }, { status: 502 })
   }
 
   const response = NextResponse.json({ ok: true })
-  response.cookies.set('borderless_token', data.token, {
+  response.cookies.set('borderless_token', data.access_token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

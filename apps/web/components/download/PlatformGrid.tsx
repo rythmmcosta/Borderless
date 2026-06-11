@@ -103,7 +103,7 @@ export default function PlatformGrid({ allAssets }: { allAssets: PlatformAsset[]
             <PlatformIcon platform={p.platform} className="h-4 w-4" />
             {p.label}
             {active === p.platform && (
-              <span className="ml-1 rounded-sm bg-primary/30 px-1.5 py-0.5 text-xs text-primary-foreground">
+              <span className="ml-1 rounded-sm bg-primary/30 px-1.5 py-0.5 text-xs text-primary-light">
                 Detected
               </span>
             )}

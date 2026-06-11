@@ -5,6 +5,7 @@ import 'core/api_client.dart';
 import 'core/theme.dart';
 import 'features/devices/devices_screen.dart';
 import 'features/clipboard/clipboard_screen.dart';
+import 'features/kvm/kvm_screen.dart';
 import 'features/settings/settings_screen.dart';
 
 void main() async {
@@ -46,6 +47,7 @@ class _MainShellState extends State<MainShell> {
   static const _screens = [
     DevicesScreen(),
     ClipboardScreen(),
+    KvmScreen(),
     SettingsScreen(),
   ];
 
@@ -59,6 +61,7 @@ class _MainShellState extends State<MainShell> {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.devices), label: 'Devices'),
           NavigationDestination(icon: Icon(Icons.content_paste), label: 'Clipboard'),
+          NavigationDestination(icon: Icon(Icons.keyboard), label: 'KVM'),
           NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),

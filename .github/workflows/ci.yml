@@ -59,6 +59,12 @@ jobs:
       - name: Install pnpm deps
         working-directory: apps/desktop
         run: pnpm install --frozen-lockfile
+      - name: Generate Tauri icons
+        working-directory: apps/desktop
+        shell: bash
+        run: |
+          python3 -c "import struct,zlib;c=lambda n,d:(lambda b:struct.pack('>I',len(d))+b+struct.pack('>I',zlib.crc32(b)&0xffffffff))(n+d);rows=b''.join(b'\x00'+b'\x80\x80\x80'*1024 for _ in range(1024));open('app-icon-source.png','wb').write(b'\x89PNG\r\n\x1a\n'+c(b'IHDR',struct.pack('>IIBBBBB',1024,1024,8,2,0,0,0))+c(b'IDAT',zlib.compress(rows))+c(b'IEND',b''))"
+          pnpm tauri icon ./app-icon-source.png
       - name: Build Tauri app
         working-directory: apps/desktop
         run: pnpm tauri build
@@ -69,7 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
-        with: { flutter-version: '3.19.0' }
+        with: { flutter-version: '3.22.0', channel: 'stable' }
       - working-directory: apps/mobile
         run: |
           flutter pub get
