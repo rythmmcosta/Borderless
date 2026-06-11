@@ -2,39 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Base ─────────────────────────────────────────────────────────────────── */
 :root {
-  --bg: #0a0a0a;
+  --bg: #080810;
+  --surface: #0e0e14;
+  --primary: #7c3aed;
+  --accent: #22d3ee;
 }
 
-html, body {
-  background-color: var(--bg);
-  color: #ffffff;
-}
-
-/* Smooth scrolling for anchor links */
 html { scroll-behavior: smooth; }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0f0f0f; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #444; }
+body {
+  background-color: var(--bg);
+  color: #f1f1f5;
+  font-feature-settings: 'cv11', 'ss01';
+}
 
-/* Prose overrides for dark mode release notes */
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #0e0e14; }
+::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a4a; }
+
+/* ── Gradient mesh background ────────────────────────────────────────────── */
+.bg-mesh {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.12), transparent),
+    radial-gradient(ellipse 50% 40% at 80% 100%, rgba(34,211,238,0.06), transparent);
+}
+
+/* ── Gradient text ───────────────────────────────────────────────────────── */
+.text-gradient {
+  background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-purple {
+  background: linear-gradient(135deg, #c4b5fd 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glass card ──────────────────────────────────────────────────────────── */
+.card-glass {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(12px);
+}
+.card-glass:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(124,58,237,0.3);
+  box-shadow: 0 0 30px rgba(124,58,237,0.1);
+}
+
+/* ── Gradient border ─────────────────────────────────────────────────────── */
+.border-gradient {
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    linear-gradient(135deg, rgba(124,58,237,0.5), rgba(34,211,238,0.3)) border-box;
+  border: 1px solid transparent;
+}
+
+/* ── Animation delays ────────────────────────────────────────────────────── */
+.delay-100  { animation-delay: 100ms; }
+.delay-200  { animation-delay: 200ms; }
+.delay-300  { animation-delay: 300ms; }
+.delay-400  { animation-delay: 400ms; }
+.delay-500  { animation-delay: 500ms; }
+.delay-600  { animation-delay: 600ms; }
+.delay-700  { animation-delay: 700ms; }
+.delay-800  { animation-delay: 800ms; }
+
+/* ── Prose dark (release notes) ──────────────────────────────────────────── */
 .prose-dark {
-  --tw-prose-body: #d1d5db;
-  --tw-prose-headings: #f9fafb;
-  --tw-prose-links: #a78bfa;
-  --tw-prose-bold: #f9fafb;
-  --tw-prose-counters: #9ca3af;
-  --tw-prose-bullets: #4b5563;
-  --tw-prose-hr: #374151;
-  --tw-prose-quotes: #f3f4f6;
-  --tw-prose-quote-borders: #7c3aed;
-  --tw-prose-captions: #9ca3af;
-  --tw-prose-code: #f3f4f6;
-  --tw-prose-pre-code: #f3f4f6;
-  --tw-prose-pre-bg: #1a1a1a;
-  --tw-prose-th-borders: #374151;
-  --tw-prose-td-borders: #1f2937;
+  --tw-prose-body:        #c4c4d4;
+  --tw-prose-headings:    #f1f1f5;
+  --tw-prose-links:       #a78bfa;
+  --tw-prose-bold:        #f1f1f5;
+  --tw-prose-counters:    #9ca3af;
+  --tw-prose-bullets:     #4b5563;
+  --tw-prose-hr:          #2a2a3a;
+  --tw-prose-quotes:      #e5e7eb;
+  --tw-prose-quote-borders:#7c3aed;
+  --tw-prose-code:        #e5e7eb;
+  --tw-prose-pre-code:    #e5e7eb;
+  --tw-prose-pre-bg:      #141420;
+  --tw-prose-th-borders:  #2a2a3a;
+  --tw-prose-td-borders:  #1e1e2e;
+}
+
+/* ── Focus ring ──────────────────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid rgba(124,58,237,0.7);
+  outline-offset: 2px;
 }

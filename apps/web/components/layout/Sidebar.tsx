@@ -1,44 +1,103 @@
 'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 const nav = [
-  { href: '/dashboard',       label: 'Dashboard',  icon: '◈' },
-  { href: '/admin/devices',   label: 'Devices',    icon: '⊞' },
-  { href: '/admin/users',     label: 'Users',      icon: '○' },
-  { href: '/admin/sessions',  label: 'Sessions',   icon: '⚡' },
-  { href: '/admin/audit',     label: 'Audit Log',  icon: '⊟' },
+  {
+    group: 'Overview',
+    items: [
+      { href: '/dashboard', label: 'Dashboard', icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10-3a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z" />
+        </svg>
+      )},
+    ],
+  },
+  {
+    group: 'Administration',
+    items: [
+      { href: '/admin/devices', label: 'Devices', icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      )},
+      { href: '/admin/users', label: 'Users', icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      )},
+      { href: '/admin/sessions', label: 'Sessions', icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      )},
+      { href: '/admin/audit', label: 'Audit Log', icon: (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      )},
+    ],
+  },
 ]
 
 export function Sidebar() {
   const path = usePathname()
+
   return (
-    <aside className="w-56 shrink-0 border-r border-white/5 flex flex-col" style={{backgroundColor:'#1a1a1a'}}>
-      <div className="p-4 border-b border-white/5">
-        <span className="font-bold text-lg tracking-tight">Borderless</span>
+    <aside className="flex w-60 shrink-0 flex-col border-r border-white/6 bg-surface">
+      {/* Logo */}
+      <div className="flex h-16 items-center gap-2.5 border-b border-white/6 px-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-violet-500 text-xs font-bold text-white">
+          B
+        </div>
+        <span className="text-[15px] font-semibold text-white">Borderless</span>
       </div>
-      <nav className="flex-1 p-2 space-y-0.5">
-        {nav.map((item) => {
-          const active = path.startsWith(item.href)
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={[
-                'flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors',
-                active
-                  ? 'text-white font-medium'
-                  : 'text-gray-400 hover:text-white',
-              ].join(' ')}
-              style={active ? {backgroundColor:'rgba(103,80,164,0.2)',color:'#9d84d6'} : {}}
-            >
-              <span className="text-base">{item.icon}</span>
-              {item.label}
-            </Link>
-          )
-        })}
+
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto p-3 space-y-5">
+        {nav.map((section) => (
+          <div key={section.group}>
+            <p className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest text-gray-600">
+              {section.group}
+            </p>
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const active = path.startsWith(item.href)
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors',
+                      active
+                        ? 'bg-primary/15 text-primary-light font-medium'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5',
+                    )}
+                  >
+                    <span className={active ? 'text-primary-light' : 'text-gray-500'}>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
-      <div className="p-3 border-t border-white/5 text-xs" style={{color:'#444'}}>v0.1.0</div>
+
+      {/* Footer */}
+      <div className="border-t border-white/5 p-4">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-xs text-gray-600 hover:text-gray-400 transition-colors"
+        >
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to website
+        </Link>
+      </div>
     </aside>
   )
 }

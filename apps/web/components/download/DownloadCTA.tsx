@@ -16,7 +16,7 @@ export default function DownloadCTA() {
         <Link
           key={p}
           href={href}
-          className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition-all hover:border-white/20 hover:bg-white/10"
+          className="flex items-center gap-2.5 rounded-xl border border-white/8 bg-white/4 px-5 py-3 text-sm font-medium text-white transition-all hover:border-white/16 hover:bg-white/8 hover:-translate-y-0.5"
         >
           <PlatformIcon platform={p} className="h-5 w-5 text-gray-300" />
           {label}

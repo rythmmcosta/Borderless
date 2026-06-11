@@ -1,12 +1,14 @@
-import { clsx } from 'clsx'
+import { cn } from '@/lib/utils'
 
-type Variant = 'default' | 'success' | 'warning' | 'destructive'
+type Variant = 'default' | 'success' | 'warning' | 'destructive' | 'info' | 'purple'
 
 const variants: Record<Variant, string> = {
-  default:     'bg-white/10 text-gray-300',
-  success:     'bg-green-500/20 text-green-400',
-  warning:     'bg-orange-500/20 text-orange-400',
-  destructive: 'bg-red-500/20 text-red-400',
+  default:     'bg-white/8 text-gray-300 border-white/10',
+  success:     'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
+  warning:     'bg-amber-500/15 text-amber-400 border-amber-500/25',
+  destructive: 'bg-red-500/15 text-red-400 border-red-500/25',
+  info:        'bg-cyan-500/15 text-cyan-400 border-cyan-500/25',
+  purple:      'bg-violet-500/15 text-violet-400 border-violet-500/25',
 }
 
 export function Badge({
@@ -20,10 +22,10 @@ export function Badge({
 }) {
   return (
     <span
-      className={clsx(
-        'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+      className={cn(
+        'inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border',
         variants[variant],
-        className
+        className,
       )}
     >
       {children}
